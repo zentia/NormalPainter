@@ -187,8 +187,8 @@ namespace UTJ.NormalPainter
             if (!terrain) { return false; }
 
             var tdata = terrain.terrainData;
-            var w = tdata.heightmapWidth;
-            var h = tdata.heightmapHeight;
+            var w = tdata.heightmapResolution;
+            var h = tdata.heightmapResolution;
             var heightmap = new PinnedArray2D<float>(tdata.GetHeights(0, 0, w, h));
 
             vertexCount = w * h;

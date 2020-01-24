@@ -3,6 +3,7 @@
 *.unitypackage
 
 .vs/
+.idea/
 _out/
 _tmp/
 _build_*/
@@ -11,8 +12,9 @@ Library/
 obj/
 Temp/
 Build/
+Logs/
 TestLocal/
 TestLocal.meta
 
-.NormalPainter/*.csproj
-.NormalPainter/*.sln
+*.csproj
+*.sln
