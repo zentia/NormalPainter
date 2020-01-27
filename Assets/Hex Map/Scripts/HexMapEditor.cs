@@ -8,6 +8,9 @@ public class HexMapEditor : MonoBehaviour
     public HexGrid hexGrid;
     private Color activeColor;
     private int activeElevation;
+    private bool applyColor;
+    private bool applyElevation = true;
+    public Toggle toggle;
 
     private void Awake()
     {
@@ -28,18 +31,54 @@ public class HexMapEditor : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(inputRay, out hit))
         {
-            EditCell(hexGrid.GetCell(hit.point));
+            EditCells(hexGrid.GetCell(hit.point));
         }
     }
 
+    void EditCells(HexCell center)
+    {
+        int centerX = center.coordinates.X;
+        int centerZ = center.coordinates.Z;
+
+        for (int r = 0, z = centerZ - brushSize; z <= centerZ; z++, r++)
+        {
+            for (int x = centerX - r; x <= centerX +brushSize; x++)
+            {
+                EditCell(hexGrid.GetCell(new HexCoordinates(x,z)));
+            }
+        }
+
+        for (int r = 0, z = centerZ + brushSize; z > centerZ; z--,r++)
+        {
+            for (int x = centerX - brushSize; x <= centerX + r; x++)
+            {
+                EditCell(hexGrid.GetCell(new HexCoordinates(x,z)));
+            }
+        }
+    }
+    
     void EditCell(HexCell cell)
     {
-        cell.color = activeColor;
-        cell.Elevation = activeElevation;
-        hexGrid.Refresh();
+        if (cell)
+        {
+            if (applyColor)
+            {
+                cell.Color = activeColor;    
+            }
+            if (applyElevation)
+                cell.Elevation = activeElevation;    
+        }
     }
 
     public Slider slider;
+    public Slider brushSlider;
+    private int brushSize;
+
+    public void SetBrushSize()
+    {
+        brushSize = (int) brushSlider.value;
+    }
+    
     public void SetElevation()
     {
         activeElevation = (int)slider.value;
@@ -47,6 +86,19 @@ public class HexMapEditor : MonoBehaviour
 
     public void SelectColor(int index)
     {
-        activeColor = colors[index];
+        applyColor = index >= 0;
+        if (applyColor)
+            activeColor = colors[index];
+    }
+
+    public void SetApplyElevation()
+    {
+        applyElevation = toggle.isOn;
+    }
+
+    public Toggle showUIToggle;
+    public void ShowUI()
+    {
+        hexGrid.ShowUI(showUIToggle.isOn);
     }
 }
