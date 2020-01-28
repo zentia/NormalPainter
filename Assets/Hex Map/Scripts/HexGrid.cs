@@ -117,7 +117,7 @@ public class HexGrid : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject())
         {
-            HandleInput();
+            //HandleInput();
         }
     }
 
