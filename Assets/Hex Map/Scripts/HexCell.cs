@@ -9,6 +9,26 @@ public class HexCell : MonoBehaviour
     private bool hasIncomingRiver, hasOutgoingRiver;
     private HexDirection incomingRiver, outgoingRiver;
     [SerializeField] private bool[] roads;
+    public int WaterLevel
+    {
+        get {
+            return waterLevel;
+        }
+        set{
+            if (waterLevel == value)
+                return;
+            waterLevel = value;
+            ValidateRivers();
+            Refresh();
+        }
+    }
+    
+    int waterLevel;
+
+    public bool IsUnderwater
+    {
+        get { return waterLevel > elevation; }
+    }
 
     public bool HasRoadThroughEdge(HexDirection direction)
     {
@@ -94,7 +114,12 @@ public class HexCell : MonoBehaviour
 
     public float RiverSurfaceY
     {
-        get { return (elevation + HexMetrics.riverSurfaceElevationOffset) * HexMetrics.elevationStep; }
+        get { return (elevation + HexMetrics.waterElevationOffset) * HexMetrics.elevationStep; }
+    }
+
+    public float WaterSurfaceY
+    {
+        get { return (waterLevel + HexMetrics.waterElevationOffset) * HexMetrics.elevationStep; }
     }
 
     public bool HasRiverThroughEdge(HexDirection direction)
@@ -144,7 +169,7 @@ public class HexCell : MonoBehaviour
         }
 
         HexCell neighbor = GetNeighbor(direction);
-        if (!neighbor || elevation < neighbor.elevation)
+        if (!IsValidRiverDestination(neighbor))
             return;
         RemoveOutgoingRiver();
         if (hasIncomingRiver && incomingRiver == direction)
@@ -157,6 +182,19 @@ public class HexCell : MonoBehaviour
         neighbor.incomingRiver = direction.Opposite();
         
         SetRoad((int)direction, false);
+    }
+
+    void ValidateRivers()
+    {
+        if (hasOutgoingRiver && !IsValidRiverDestination(GetNeighbor(outgoingRiver)))
+        {
+            RemoveOutgoingRiver();
+        }
+
+        if (hasIncomingRiver && !GetNeighbor(incomingRiver).IsValidRiverDestination(this))
+        {
+            RemoveIncomingRiver();
+        }
     }
     
     public Color Color
@@ -194,12 +232,7 @@ public class HexCell : MonoBehaviour
             Vector3 uiPosition = uiRect.localPosition;
             uiPosition.z = -position.y;
             uiRect.localPosition = uiPosition;
-            if (hasOutgoingRiver && elevation < GetNeighbor(outgoingRiver).elevation)
-            {
-                RemoveOutgoingRiver();
-            }
-            if (hasIncomingRiver && elevation > GetNeighbor(incomingRiver).elevation)
-                RemoveIncomingRiver();
+            ValidateRivers();
 
             for (int i = 0; i < roads.Length; i++)
             {
@@ -268,5 +301,10 @@ public class HexCell : MonoBehaviour
     void RefreshSelfOnly()
     {
         chunk.Refresh();
+    }
+
+    bool IsValidRiverDestination(HexCell neighbor)
+    {
+        return neighbor && (elevation >= neighbor.elevation || waterLevel == neighbor.elevation);
     }
 }
