@@ -128,6 +128,12 @@ public class HexMapEditor : MonoBehaviour
                 cell.Elevation = activeElevation;
             if (applyWaterLevel)
                 cell.WaterLevel = activeWaterLevel;
+            if (applyUrbanLevel)
+                cell.UrbanLevel = activeUrbanLevel;
+            if (applyFarmLevel)
+                cell.FarmLevel = activeFarmLevel;
+            if (applyPlantLevel)
+                cell.PlantLevel = activePlantLevel;
             if (riverMode == OptionalToggle.No)
                 cell.RemoveRiver();
             if (roadMode == OptionalToggle.No)
@@ -176,5 +182,40 @@ public class HexMapEditor : MonoBehaviour
     public void ShowUI()
     {
         hexGrid.ShowUI(showUIToggle.isOn);
+    }
+
+    private int activeUrbanLevel, activeFarmLevel, activePlantLevel;
+    public Slider activeUrbanLevelSlider, activeFarmLevelSlider, activePlantLevelSlider;
+    private bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
+    public Toggle applyUrbanLevelToggle, applyFarmLevelToggle, applyPlantLevelToggle;
+
+    public void SetApplyUrbanLevel()
+    {
+        applyUrbanLevel = applyUrbanLevelToggle.isOn;
+    }
+
+    public void SetUrbanLevel()
+    {
+        activeUrbanLevel = (int)activeUrbanLevelSlider.value;
+    }
+
+    public void SetApplyFarmLevel()
+    {
+        applyFarmLevel = applyFarmLevelToggle.isOn;
+    }
+
+    public void SetFarmLevel()
+    {
+        activeFarmLevel = (int)activeFarmLevelSlider.value;
+    }
+
+    public void SetApplyPlantLevel()
+    {
+        applyPlantLevel = applyPlantLevelToggle.isOn;
+    }
+
+    public void SetPlantLevel()
+    {
+        activePlantLevel = (int)activePlantLevelSlider.value;
     }
 }
