@@ -133,6 +133,8 @@ public class HexMapEditor : MonoBehaviour
                 cell.Elevation = activeElevation;
             if (applyWaterLevel)
                 cell.WaterLevel = activeWaterLevel;
+            if (applySpecialIndex)
+                cell.SpecialIndex = activeSpecialIndex;
             if (applyUrbanLevel)
                 cell.UrbanLevel = activeUrbanLevel;
             if (applyFarmLevel)
@@ -191,10 +193,20 @@ public class HexMapEditor : MonoBehaviour
         hexGrid.ShowUI(showUIToggle.isOn);
     }
 
-    private int activeUrbanLevel, activeFarmLevel, activePlantLevel;
-    public Slider activeUrbanLevelSlider, activeFarmLevelSlider, activePlantLevelSlider;
-    private bool applyUrbanLevel, applyFarmLevel, applyPlantLevel;
-    public Toggle applyUrbanLevelToggle, applyFarmLevelToggle, applyPlantLevelToggle;
+    private int activeUrbanLevel, activeFarmLevel, activePlantLevel,activeSpecialIndex;
+    public Slider activeUrbanLevelSlider, activeFarmLevelSlider, activePlantLevelSlider,activeSpecialSlider;
+    private bool applyUrbanLevel, applyFarmLevel, applyPlantLevel,applySpecialIndex;
+    public Toggle applyUrbanLevelToggle, applyFarmLevelToggle, applyPlantLevelToggle, applySpecialToggle;
+
+    public void SetApplySpecialIndex()
+    {
+        applySpecialIndex = applySpecialToggle.isOn;
+    }
+
+    public void SetSpecialIndex()
+    {
+        activeSpecialIndex = (int) activeSpecialSlider.value;
+    }
 
     public void SetApplyUrbanLevel()
     {
