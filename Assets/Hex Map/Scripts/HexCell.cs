@@ -88,6 +88,20 @@ public class HexCell : MonoBehaviour
         }
     }
 
+    public bool Walled
+    {
+        get { return walled; }
+        set
+        {
+            if (walled != value)
+            {
+                walled = value;
+                Refresh();
+            }
+        }
+    }
+    private bool walled;
+
     public void RemoveRoads()
     {
         for (int i = 0; i < neighbors.Length; i++)
